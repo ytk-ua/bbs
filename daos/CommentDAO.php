@@ -1,8 +1,8 @@
 <?php
     //外部ファイルの読み込み
-    require_once 'models/Post.php';
+    require_once 'models/Comment.php';
     //DAO(Database Acess Object)
-    class PostDAO{
+    class CommentDAO{
         //データベースに接続するメソッド
         private static function get_connection(){
         // 接続オプション[設定データベース文字化けや接続失敗時の設定情報]
@@ -42,19 +42,18 @@
             // 完成した投稿一覧、はいあげる
             return $posts;    
         }
-        //データーベースに新しい投稿を登録するメソッド
-        public static function insert($post){
+        //データーベースに新しいコメントを登録するメソッド
+        public static function insert($comment){
             // 例外処理
             try{
                 // データベースに接続して万能の神様誕生
                 $pdo = self::get_connection();
                 // 具体的な値はあいまいにしたまま INSERT文の実行準備
-                $stmt = $pdo->prepare('INSERT INTO posts(user_id, title, content, image) VALUES(:user_id, :title, :content, :image)');
+                $stmt = $pdo->prepare('INSERT INTO comments(user_id, post_id, content) VALUES(:user_id, :post_id, :content)');
                 // バインド処理（あいまいだった値を具体的な値で穴埋めする）
-                $stmt->bindValue(':user_id', $post->user_id, PDO::PARAM_INT);
-                $stmt->bindValue(':title', $post->title, PDO::PARAM_STR);
-                $stmt->bindValue(':content', $post->content, PDO::PARAM_STR);
-                $stmt->bindValue(':image', $post->image, PDO::PARAM_STR);
+                $stmt->bindValue(':user_id', $comment->user_id, PDO::PARAM_INT);
+                $stmt->bindValue(':post_id', $comment->post_id, PDO::PARAM_INT);
+                $stmt->bindValue(':content', $comment->content, PDO::PARAM_STR);
 
                 // INSERT文本番実行
                 $stmt->execute();
@@ -80,7 +79,7 @@
 
                 // Fetch ModeをPostクラスに設定
                 $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Post');
-                // SELECT文の結果を Postクラスのインスタンスに格納。fetch：抜き出せ
+                // SELECT文の結果を Userクラスのインスタンスに格納。fetch：抜き出せ
                 $post = $stmt->fetch();
                 
             }catch(PDOException $e){

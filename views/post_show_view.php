@@ -2,28 +2,30 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>マイページ</title>
+    <title>投稿の詳細</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!--ビュー（V）ファイル　index.phpを参照して使っている-->
-    <h1>マイページ</h1>
-    <p></p><?= $login_user->name ?>さん、ようこそ！</p>
-    <h2>投稿一覧</h2>
-    <p>投稿件数: <?= count($posts) ?>件</p>
-    <?php foreach($posts as $post): ?>
+    <h1><?= $post->id ?>番の投稿詳細</h1>
+
     <ul>
-        <li><a href="post_show.php?id=<?= $post->id ?>"><?= $post->id ?></a></li>
+        <li><?= $post->id ?></li>
         <li><?= $post->user()->name ?></li>
         <li><?= $post->title ?></li>
         <li><?= $post->content ?></li>
         <li><img src="upload/<?= $post->image ?>"></li>
         <li><?= $post->created_at ?></li>
     </ul>
-    <?php endforeach; ?>
     
-    <p><a href="post_create.php">新規投稿</a></p>
-    <p><a href="logout.php">ログアウト</a></p>
+    <h2>コメント投稿</h2>
+    <form action="comment_store.php" method="POST">
+        <input type="hidden" name="post_id" value="<?= $post->id ?>">
+        コメント：<input type="text" name="content"><br>
+         <button type="submit">投稿</button>
+    </form>
+    
+    <p><a href="top.php">マイページへ</a></p>
     <!--<p><a href="delete.php">全ユーザー削除</a></p>-->
 </body>
 </html>
