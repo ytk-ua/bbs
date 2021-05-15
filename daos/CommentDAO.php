@@ -58,6 +58,7 @@
                 // INSERT文本番実行
                 $stmt->execute();
                 
+                
             }catch(PDOException $e){
             }finally{
                 // 後処理
